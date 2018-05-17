@@ -1,0 +1,18 @@
+* {
+	margin: 0;
+}
+
+#content { 
+	min-height: 50.80em;
+}
+
+#footer {
+	padding: 2em;
+	font-size: 12px;
+	background-color: #0f0f0f;
+	color: white;
+}
+
+#footer a {
+	color: white;
+}
