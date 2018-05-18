@@ -38,7 +38,24 @@
 				<?php endif; ?>
 
 				<?php if( has_category() ): ?>
-				<small><?php the_category(' &#9675; '); ?> || <?php the_tags(); ?> || <?php edit_post_link(); ?></small>
+				<small>
+					<?php 
+						$terms_list = wp_get_post_terms( $post->ID, 'field'); 
+						foreach( $terms_list as $k=>$term) {
+
+							if($k > 0 ) echo ', ';
+							echo $term->name;
+						}
+					?> 
+					
+					|| <?= bootstrap_custom_terms($post->ID, 'software'); ?> 
+					
+					<?php if( current_user_can('manage_options')): ?>
+						||
+						<?php edit_post_link(); ?>
+					<?php endif; ?>
+				</small>
+				
 				<?php endif; ?>
 
 				<div class="text-justify">

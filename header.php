@@ -1,8 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html <?php language_attributes(); ?>>
 	<head>
-		<meta charset="utf-8">
-		<title>Bootstrap Theme</title>
+		<meta charset="<?php bloginfo('charset'); ?>">
+		<title><?php bloginfo('name'); ?> <?php wp_title(' - '); ?></title>
+
+		<?php
+			/**
+			 * Same as tag line
+			 */
+		?>
+		<meta name="description" content="<?php bloginfo('description'); ?>" />
 		<?php
 			/**
 			 * Premade function under the hook wordpress
@@ -93,8 +100,13 @@
 					'container_class' => 'collapse navbar-collapse',
 					'menu_class' => 'navbar-nav mr-auto',
 					'walker' => new wp_bootstrap_navwalker(),
+					// 'walker' => 'Walker_Nav_Primary',
 				]);
 			?>
 			</nav>
 		</section>
 		<!-- Lower Navigation Bar (Primary) -->
+
+		<!-- Custom Search Form -->
+		<?php get_search_form(); ?>
+		<!-- Custom Search Form -->

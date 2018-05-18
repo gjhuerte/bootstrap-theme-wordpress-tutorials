@@ -7,18 +7,28 @@
 ?>
 
 <div class="container-fluid" id="content">
-	<?php if(have_posts()): ?>
-		<div class="row" style="margin: 1em;">
+
+    <?php 
+        // $currentPage = ( get_query_var('paged')) ? get_query_var('paged') : 1;
+        // $args = [
+        //     'posts_per_page' => 3,
+        //     'paged' => $currentPage,
+        // ];
+
+        // query_posts($args);
+        
+        if(have_posts()): ?>
+		<div class="row">
+            
+
 			<div class="col-xs-12 col-sm-8">
+                <header class="page-header">
+                    <?php the_archive_title( '<h1 class="text-muted page-title">', '</h1>'); ?>
+                    <?php the_archive_description( '<div class="taxonomy-description>', '</div>'); ?>
+                </header>
+
 				<?php while( have_posts()): the_post(); ?>
 				<div class="">
-					<?php
-
-						/**
-						 * Returns the format of each post
-						 */
-						get_post_format(); 
-					?>
 
 					<?php 
 
@@ -29,7 +39,7 @@
 						 * locates the file from the given post format else returns content
 						 * e.g. file content-image.php
 						 */
-						get_template_part('content', get_post_format()); 
+						get_template_part('content', 'archive'); 
 					?>
 				</div>
 				<?php endwhile; ?>

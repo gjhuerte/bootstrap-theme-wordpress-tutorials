@@ -2,7 +2,7 @@
 	margin: 0;
 }
 
-#content { 
+#content, .content { 
 	min-height: 50.80em;
 }
 

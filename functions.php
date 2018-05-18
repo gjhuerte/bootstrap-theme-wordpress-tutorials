@@ -1,10 +1,6 @@
 <?php
 
 	/**
-	 * walker for wordpress and bootstrap integration
-	 */
-	require_once( 'wp-bootstrap-navwalker.php');
-	/**
 	 * 	1. give the functions a unique name
 	 * 	2. include the scripts and styles
 	 * 	3. call the function with action when he has execute the function
@@ -90,6 +86,14 @@
 	]);
 
 	/**
+	 * HTML 5 Support for Forms and Elements
+	 * Parameter 2: Apply to a specific section ( search form )
+	 */
+	add_theme_support('html5', [
+		'search-form'
+	]);
+
+	/**
 	 * Sidebar functions
 	 * will prepend a sidebar to the first part of class
 	 */
@@ -112,5 +116,136 @@
 	 * Activate the widgets menu
 	 */
 	add_action('widgets_init', 'app_widget_setup');
+
+
+	/**
+	 * walker for wordpress and bootstrap integration
+	 */
+	require get_template_directory() . '/wp-bootstrap-navwalker.php';
+	require get_template_directory() . '/inc/walker.php';
+
+	/**
+	 * Removes the version of wordpress in meta tag
+	 */
+	function wordpress_remove_version() {
+		return '';
+	}
+
+	add_filter( 'the_generator', 'wordpress_remove_version');
+
+	/**
+	 * Create Custom Post Types
+	 */
+	function bootstrap_custom_post_type() {
+		$labels = [
+			'name' => 'Portfolio',
+			'singular_name' => 'Portfolio',
+			'add_new' => 'Add Portfolio Item',
+			'all_items' => 'All Items',
+			'add_new_item' => 'Add Item',
+			'edit_item' => 'Edit Item',
+			'new_item' => 'New Item',
+			'view_item' => 'View Item',
+			'search_item' => 'Search Portfolio',
+			'not_found' => 'No items found',
+			'not_found_in_trash' => 'No items found in trash',
+			'parent_item_colon' => 'Parent Item',
+		];
+
+		$args =  [
+			'labels' => $labels,
+			'public' => true,
+			'has_archive' => true,
+			'publicly_queryable' => true,
+			'query_var' => true,
+			'rewrite' => true,
+			'capability_type' => 'post',
+			'hierarchical' => false,
+			'supports' => array(
+				'title', 
+				'editor', 
+				'excerpt', 
+				'thumbnail', 
+				'revisions',
+			),
+			'taxonomies' => array(
+				'categories',
+				'post_tag',
+			),
+			'menu_position' => 5,
+			'exclude_from_search' => false,
+		];
+
+		register_post_type('portfolio', $args);
+	}
+
+	add_action('init', 'bootstrap_custom_post_type');
+
+	/**
+	 * Custom Taxonomies
+	 * types:
+	 * 	- hierarchical -> category. has parent and child relationships
+	 *  - non-hierarchical
+	 */
+	function bootstrap_custom_taxonomies() {
+		/**
+		 * hierarchical
+		 */
+		$labels = [
+			'name' => 'Fields',
+			'singular_name' => 'Fiel',
+			'search_items' => 'Search Fields',
+			'all_items' => 'All Fields',
+			'parent_item' => 'Parent Field',
+			'parent_item_colon' => 'Parent Field:',
+			'edit_item' => 'Edit Field',
+			'update_item' => 'Update Field',
+			'add_new_item' => 'Add New Field',
+			'new_item_name' => 'New Field Name',
+			'menu_name' => 'Field'
+		];
+
+		$args = [
+			'hierarchical' => true,
+			'labels' => $labels,
+			'show_ui' => true,
+			'show_admin_column' => true,
+			'query_var' => true,
+			'rewrite' => array( 'slug' => 'field'),
+		];
+
+		register_taxonomy('field', array( 'portfolio'), $args);
+
+		/**
+		 * not hierarchical
+		 */
+		register_taxonomy('software', 'portfolio', array(
+			'label' => 'Software',
+			'rewrite' => array('slug' => 'software'),
+			'hierarchical' => false,
+		));
+	}
+
+	add_action( 'init', 'bootstrap_custom_taxonomies');
+
+	/**
+	 * Custom Term Functions
+	 */
+	function bootstrap_custom_terms($postID, $term)  {
+		$terms_list = wp_get_post_terms( $postID, $term);
+		$output = '';
+
+		$i = 0;
+
+		foreach( $terms_list as $term ) {
+			$i++;
+			if ($i > 1) {
+				$output .= ", ";
+			}
+			$output .= '<a href="' . get_term_link( $term ) . '">' . $term->name . '</a>';
+		}
+
+		return $output;
+	}
 
 ?>
